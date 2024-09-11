@@ -6,10 +6,16 @@ from schedule_display import ScheduleDisplay
 
 
 class MyApp(App):
+    def __init__(self, **kwargs):
+        super(MyApp, self).__init__(**kwargs)
+        self.app_screen = ScheduleDisplay()
+
     def build(self):
-        app_screen = ScheduleDisplay()
         Window.maximize()
-        return app_screen
+        return self.app_screen
+
+    def do_each_tick(self, dt):
+        self.app_screen.tick(dt)
 
 
 if __name__ == '__main__':
