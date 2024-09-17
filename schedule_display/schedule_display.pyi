@@ -1,19 +1,12 @@
 from kivy.uix.widget import Widget
 from kivy.uix.label import Label
 from kivy.uix.stacklayout import StackLayout
-from kivy.graphics import Color, Rectangle
+from kivy.graphics import Rectangle
 from kivy.uix.stencilview import StencilView
-from kivy.clock import Clock
 
 from typing import Callable, Any
 
 from datetime import datetime, timedelta
-
-white = (1, 1, 1, 1)
-black = (0, 0, 0, 1)
-blue = (0.2, 0.4, 1, 1)
-light_blue = (0.4, 0.6, 1, 1)
-yellow = (1, 1, 0, 1)
 
 
 def get_bind_lambda(target, value_name: str,
@@ -44,18 +37,17 @@ class TrainDisplay(StackLayout):
         self.peron: str = None
         ...
 
-class WallClockDisplay(Widget):
-    def __init__(self, **kwargs):
-        super().__init__()
-        self.datetime: datetime = None
-
-    def update_datetime(self, _timedelta) -> None: ...
 
 class ScheduleDisplay(Widget):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.bind = super().bind
-        self.background: Rectangle = None
+        self.bind = ...
+        self.background: Rectangle = ...
+
+        self.czas: str = ...
+        self.do: str = ...
+        self.przez: str = ...
+        self.peron: str = ...
 
     def tick(self, dt: int) -> None: ...
 

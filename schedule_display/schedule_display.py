@@ -2,62 +2,29 @@ from kivy.uix.widget import Widget
 from kivy.uix.label import Label
 from kivy.uix.stacklayout import StackLayout
 from kivy.graphics import Color, Rectangle
-from kivy.uix.stencilview import StencilView
 from kivy.clock import Clock
 
-from typing import Callable, Any
+from utensils import bind_single, ClippedLabel, ClippedStackLayout, Colors
 
-from datetime import datetime, timedelta
-
-
-white = (1, 1, 1, 1)
-black = (0, 0, 0, 1)
-blue = (0.2, 0.4, 1, 1)
-light_blue = (0.4, 0.6, 1, 1)
-yellow = (1, 1, 0, 1)
-
-
-def get_bind_lambda(target, value_name, transform_lambda):
-    # Example: bind child size as parent size /2
-    # target: child
-    # value_name: 'size'
-    # transform_lambda: lambda size: (size[0] // 2, size[1] // 2)
-    bind_lambda = lambda instance, value: setattr(target, value_name, transform_lambda(value))
-    return bind_lambda
-
-def bind_single(parent, parent_attr_name, child, child_attr_name, transform_lambda):
-    # Example: bind child y as .5 parent height
-    # bind_single(parent, 'height', child, 'y', lambda h: h // 2
-    parent.bind(**{parent_attr_name: get_bind_lambda(
-        child, child_attr_name, transform_lambda
-    )})
-
-
-class ClippedLabel(Label, StencilView):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.bind = super().bind
-
-
-class ClippedStackLayout(StackLayout, StencilView):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.bind = super().bind
+white = Colors.white
+black = Colors.black
+yellow = Colors.yellow
+blue = Colors.blue
+light_blue = Colors.light_blue
 
 
 class TrainDisplay(StackLayout):
     def __init__(self, **kwargs):
         super().__init__()
-        self.bind = super().bind
 
         self.orientation = 'lr-tb'
         self.size_hint = (1, None)
         self.height = 60
 
-        self.czas: str = kwargs['czas']
-        self.do: str = kwargs['do']
-        self.przez: str = kwargs['przez']
-        self.peron: str = kwargs['peron']
+        self.czas = kwargs['czas']
+        self.do = kwargs['do']
+        self.przez = kwargs['przez']
+        self.peron = kwargs['peron']
 
         # Draw background
         with self.canvas:
@@ -69,9 +36,9 @@ class TrainDisplay(StackLayout):
                     lambda size: (size[0] - 6, size[1] - 6))
 
         # Create Labels
-        czas_label =  ClippedLabel(text=self.czas,  font_size="40px", color=black, size_hint=(None, 1))
-        do_label =    ClippedLabel(text=self.do,    font_size="40px", color=white, size_hint=(None, 1))
-        padding =     ClippedLabel(                                                size_hint=(None, 1))
+        czas_label  = ClippedLabel(text=self.czas,  font_size="40px", color=black, size_hint=(None, 1))
+        do_label    = ClippedLabel(text=self.do,    font_size="40px", color=white, size_hint=(None, 1))
+        padding     = ClippedLabel(                                                size_hint=(None, 1))
         peron_label = ClippedLabel(text=self.peron, font_size="40px", color=white, size_hint=(None, 1))
         przez_label = ClippedLabel(text=self.przez, font_size="40px", color=white, size_hint=(None, 1))
 
@@ -89,15 +56,6 @@ class TrainDisplay(StackLayout):
         self.add_widget(przez_label)
         self.add_widget(peron_label)
         Clock.schedule_once(do_after_build)
-
-
-class WallClockDisplay(Widget):
-    def __init__(self, **kwargs):
-        super().__init__()
-        self.datetime = datetime(2023, 9, 11, 12, 0, 0)
-
-    def update_datetime(self, _timedelta):
-        self.datetime = self.datetime + _timedelta
 
 
 class ScheduleDisplay(Widget):
@@ -157,8 +115,16 @@ class ScheduleDisplay(Widget):
         train_layout.add_widget(TrainDisplay(
             czas='08:58', do="Katowice", przez="Test, Test, Test", peron="1"))
 
+
+        # Draw the clock
+        # TODO: add
+        self.add_widget(self.wall_clock)
+
     def tick(self, dt):
         pass
 
     def on_touch_down(self, _):
         pass
+
+
+__all__ = ['ScheduleDisplay']
