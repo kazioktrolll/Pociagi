@@ -1,6 +1,9 @@
 from kivy.uix.stacklayout import StackLayout
 from kivy.uix.stencilview import StencilView
 from kivy.uix.label import Label
+from kivy.graphics import Rectangle, PopMatrix, PushMatrix, Rotate
+
+from math import radians, sin, cos
 
 
 class Colors(object):
@@ -39,4 +42,23 @@ class ClippedStackLayout(StackLayout, StencilView):
         self.bind = super().bind
 
 
-__all__ = ['ClippedLabel', 'ClippedStackLayout', 'bind_single', 'Colors']
+def create_rotated_rectangle(rect_angle_deg, rect_width, rect_height, radius, center):
+    angle_rad = radians(rect_angle_deg)
+    center_x, center_y = center
+
+    # Calculate rectangle position along the circle
+    rect_x = center_x + radius * cos(angle_rad) - rect_width / 2
+    rect_y = center_y + radius * sin(angle_rad) - rect_height / 2
+
+    # Apply rotation to face towards the center
+    PushMatrix()
+    Rotate(angle=rect_angle_deg + 90,
+           origin=(rect_x + rect_width / 2, rect_y + rect_height / 2))  # Rotate rectangle
+
+    # Draw the rectangle
+    Rectangle(pos=(rect_x, rect_y), size=(rect_width, rect_height))
+
+    PopMatrix()  # Restore transformation matrix
+
+
+__all__ = ['ClippedLabel', 'ClippedStackLayout', 'bind_single', 'Colors', 'create_rotated_rectangle']
