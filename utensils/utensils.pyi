@@ -2,44 +2,46 @@ from kivy.uix.stacklayout import StackLayout
 from kivy.uix.stencilview import StencilView
 from kivy.uix.label import Label
 
-from typing import Tuple, Callable, Any
+from typing import Callable, Any
 
 
-Color = Tuple[float, float, float, float]
+Color = tuple[float, float, float, float]
 
 
 class Colors(object):
-    white:         Color = ...
-    black:         Color = ...
-    blue:          Color = ...
-    light_blue:    Color = ...
-    yellow:        Color = ...
+    white: Color
+    black: Color
+    blue: Color
+    light_blue: Color
+    yellow: Color
 
 
-def get_bind_lambda(target, value_name: str, transform_lambda: Callable[[Any], Any])\
-        -> Callable[[Any, Any], None]:
-    ...
+def get_bind_lambda(target, value_name: str,
+                    transform_lambda: Callable[[Any], Any]
+                    ) -> Callable[[Any, Any], None]: ...
 
-def bind_single(parent, parent_attr_name: str, child, child_attr_name: str,
-                transform_lambda: Callable[[Any], Any]) -> None:
-    ...
+def bind_single(parent, parent_attr_name: str,
+                child,  child_attr_name: str,
+                transform_lambda: Callable[[Any], Any]
+                ) -> None: ...
 
 
 class ClippedLabel(Label, StencilView):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.bind = super().bind
+        self.bind: super().bind
         ...
 
 
 class ClippedStackLayout(StackLayout, StencilView):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.bind = super().bind
+        self.bind: super().bind
         ...
 
-def create_rotated_rectangle(rect_angle_deg: float, rect_width: int, rect_height: int, radius: int,
-                             center: Tuple[int, int]) -> None:
-    ...
+def create_rotated_rectangle(rect_angle_deg: float,
+                             rect_width: int, rect_height: int,
+                             radius: int, center: tuple[int, int]
+                             ) -> None: ...
 
-__all__ = ...
+__all__: list[str]

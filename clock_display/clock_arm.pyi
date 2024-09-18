@@ -2,13 +2,13 @@ from kivy.uix.widget import Widget
 from kivy.uix.image import Image
 from kivy.uix.floatlayout import FloatLayout
 
-from typing import Tuple, Any
+from typing import Any
 
 
 class ClockArm(Widget):
-    def __init__(self, size:Tuple[int, int], color:Tuple[float, float, float, float]=...):
-        self.image: Image = ...
-        self.radius: int = ...
+    def __init__(self, size:tuple[int, int], color:tuple[float, float, float, float]=...):
+        self.image: Image
+        self.radius: int
         ...
 
     def update(self, _:Any=...) -> None:
@@ -19,3 +19,5 @@ class ClockArm(Widget):
         ...
     def get_widget(self) -> FloatLayout:
         ...
+
+__all__: list[str]

@@ -8,8 +8,8 @@ from datetime import datetime, timedelta
 class WallClockDisplay(Widget):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.datetime: datetime = ...
-        self.texture: Image = ...
+        self.datetime: datetime
+        self.texture: Image
 
 
     def update_datetime(self, _timedelta: timedelta) -> None: ...
@@ -19,3 +19,5 @@ class WallClockDisplay(Widget):
 
 class MyApp(App):
     def build(self) -> WallClockDisplay: ...
+
+__all__: list[str]
