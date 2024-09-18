@@ -1,8 +1,8 @@
 from kivy.app import App
+from kivy.clock import Clock
 from kivy.core.window import Window
 
 from schedule_display import ScheduleDisplay
-
 
 
 class MyApp(App):
@@ -12,9 +12,10 @@ class MyApp(App):
 
     def build(self):
         Window.maximize()
+        Clock.schedule_interval(self.tick, 1/144)
         return self.app_screen
 
-    def do_each_tick(self, dt):
+    def tick(self, dt):
         self.app_screen.tick(dt)
 
 

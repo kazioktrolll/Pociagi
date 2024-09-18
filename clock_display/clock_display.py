@@ -1,39 +1,34 @@
 from kivy.app import App
-from kivy.graphics import Color, Rectangle
 from kivy.clock import Clock
 from kivy.uix.widget import Widget
 from kivy.uix.image import Image
-from kivy.uix.floatlayout import  FloatLayout
+from kivy.uix.relativelayout import RelativeLayout
 
 from datetime import datetime, timedelta
 
-from utensils import bind_single, Colors, create_rotated_rectangle
+from utensils import bind_single
 
-from clock_arm import ClockArm
+if __name__ != "__main__": from .clock_arm import ClockArm
 
 
 class WallClockDisplay(Widget):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.datetime = datetime(2023, 9, 11, 12, 0, 0)
+        self.datetime = datetime(2023, 9, 11, 12, 5, 10)
         self.clock_image = Image(source='images/clock_image.png')
         self.clock_arm_hour = ClockArm(size=(50, 350))
         self.clock_arm_minute = ClockArm(size=(30, 400))
         self.clock_arm_second = ClockArm(size=(10, 450))
 
 
-        with self.canvas:
-            Color(1, 0, 1, 1)
-            rect = Rectangle()
-            bind_single(self, 'size', rect, 'size', lambda s: s)
-
-        layout = FloatLayout()
+        layout = RelativeLayout(size=self.size)
+        bind_single(self, 'size', layout, 'size', lambda s: s)
+        self.add_widget(layout)
         layout.add_widget(self.clock_image)
         layout.add_widget(self.clock_arm_hour.get_widget())
         layout.add_widget(self.clock_arm_minute.get_widget())
         layout.add_widget(self.clock_arm_second.get_widget())
-        self.add_widget(layout)
-        bind_single(self, 'size', layout, 'size', lambda s: s)
+        bind_single(self, 'pos', layout, 'pos', lambda p: p)
 
     def update_datetime(self, _timedelta):
         self.datetime = self.datetime + _timedelta
@@ -47,6 +42,7 @@ class WallClockDisplay(Widget):
 
 
 if __name__ == '__main__':
+    from clock_arm import ClockArm
     class MyApp(App):
         def build(self):
             clock = WallClockDisplay()

@@ -1,3 +1,4 @@
+from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.widget import Widget
 from kivy.uix.label import Label
 from kivy.uix.stacklayout import StackLayout
@@ -5,6 +6,8 @@ from kivy.graphics import Color, Rectangle
 from kivy.clock import Clock
 
 from utensils import bind_single, ClippedLabel, ClippedStackLayout, Colors
+
+from clock_display import WallClockDisplay
 
 white = Colors.white
 black = Colors.black
@@ -61,67 +64,75 @@ class TrainDisplay(StackLayout):
 class ScheduleDisplay(Widget):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.bind = super().bind
 
-        # Create background
-        with self.canvas:
-            Color(*blue)
-            self.background = Rectangle(pos=(0, 0), size=(self.width, self.height))
-            bind_single(self, 'size', self.background, 'size', lambda s: s)
+        def draw():
+            self.root_layout = FloatLayout()
+            self.add_widget(self.root_layout)
+            bind_single(self, 'size', self.root_layout, 'size', lambda s: s)
 
 
-        # Main layout
-        main_layout = StackLayout(orientation='tb-lr')
-        bind_single(self, 'size', main_layout, 'size', lambda s: s)
-        self.add_widget(main_layout)
+            # Create background
+            with self.canvas.before:
+                Color(*blue)
+                background = Rectangle(pos=(0, 0), size=(self.width, self.height))
+                bind_single(self, 'size', background, 'size', lambda s: s)
 
 
-        # Header
-        odjazdy_label = Label(text="Odjazdy", font_size="70px", color=yellow, size_hint=(1, None), height=200)
-        main_layout.add_widget(odjazdy_label)
+            # Main layout
+            main_layout = StackLayout(orientation='tb-lr', size_hint=(1, 1))
+            self.root_layout.add_widget(main_layout)
 
 
-        # Columns' sub-headers
-        naglowki_layout = ClippedStackLayout(orientation='lr-tb', size_hint=(1, None), height=50)
-        main_layout.add_widget(naglowki_layout)
-
-        czas_label  = Label(text="Czas",  font_size="30px", color=yellow, size_hint=(None, 1), width=100)
-        do_label    = Label(text="Do",    font_size="30px", color=yellow, size_hint=(None, 1), width=100)
-        peron_label = Label(text="Peron", font_size="30px", color=yellow, size_hint=(None, 1), width=120)
-        przez_label = Label(text="Przez", font_size="30px", color=yellow, size_hint=(None, 1))
-
-        bind_single(naglowki_layout, 'width', przez_label, 'width',
-                    lambda width: width - czas_label.width - do_label.width - peron_label.width)
-
-        naglowki_layout.add_widget(czas_label)
-        naglowki_layout.add_widget(do_label)
-        naglowki_layout.add_widget(przez_label)
-        naglowki_layout.add_widget(peron_label)
+            # Header
+            odjazdy_label = Label(text="Odjazdy", font_size="70px", color=yellow, size_hint=(1, None), height=200)
+            main_layout.add_widget(odjazdy_label)
 
 
-        # Train arrival display layout
-        train_layout = StackLayout(orientation='tb-lr', size_hint=(1, None))
-        bind_single(naglowki_layout, 'y', train_layout, 'height', lambda y: y)
-        main_layout.add_widget(train_layout)
+            # Columns' sub-headers
+            naglowki_layout = ClippedStackLayout(orientation='lr-tb', size_hint=(1, None), height=50)
+            main_layout.add_widget(naglowki_layout)
 
+            czas_label = Label(text="Czas", font_size="30px", color=yellow, size_hint=(None, 1), width=100)
+            do_label = Label(text="Do", font_size="30px", color=yellow, size_hint=(None, 1), width=100)
+            peron_label = Label(text="Peron", font_size="30px", color=yellow, size_hint=(None, 1), width=120)
+            przez_label = Label(text="Przez", font_size="30px", color=yellow, size_hint=(None, 1))
+
+            bind_single(naglowki_layout, 'width', przez_label, 'width',
+                        lambda width: width - czas_label.width - do_label.width - peron_label.width)
+
+            naglowki_layout.add_widget(czas_label)
+            naglowki_layout.add_widget(do_label)
+            naglowki_layout.add_widget(przez_label)
+            naglowki_layout.add_widget(peron_label)
+
+
+            # Train arrival display layout
+            self.train_layout = StackLayout(orientation='tb-lr', size_hint=(1, None))
+            bind_single(naglowki_layout, 'y', self.train_layout, 'height', lambda y: y)
+            main_layout.add_widget(self.train_layout)
+
+
+            # Clock
+            self.clock_display = WallClockDisplay(size_hint=(None, None), size=(180, 180),
+                                                  x=20, top=self.root_layout.top-20)
+            self.root_layout.add_widget(self.clock_display)
+            bind_single(self.root_layout, 'top', self.clock_display, 'top', lambda y: y-20)
+        draw()
+
+        self.train_queue = []
 
         # Add trains to be displayed (to remove later)
-        train_layout.add_widget(TrainDisplay(
+        self.train_layout.add_widget(TrainDisplay(
             czas='08:00', do=".", przez=",", peron="!"))
-        train_layout.add_widget(TrainDisplay(
+        self.train_layout.add_widget(TrainDisplay(
             czas='08:10', do="Praha", przez="Cokolwiek", peron="2"))
-        train_layout.add_widget(TrainDisplay(
+        self.train_layout.add_widget(TrainDisplay(
             czas='08:35', do="Gdynia Główna", przez="Nie wiem", peron="3"))
-        train_layout.add_widget(TrainDisplay(
+        self.train_layout.add_widget(TrainDisplay(
             czas='08:58', do="Katowice", przez="Test, Test, Test", peron="1"))
 
-
-        # Draw the clock
-        # TODO: add
-        self.add_widget(self.wall_clock)
-
     def tick(self, dt):
-        pass
+        self.clock_display.tick(dt)
 
     def on_touch_down(self, _):
         pass
