@@ -2,7 +2,8 @@ from kivy.app import App
 from kivy.clock import Clock
 from kivy.core.window import Window
 
-from schedule_display import ScheduleDisplay, TrainDisplay
+from schedule_display import ScheduleDisplay
+from train import TrainDisplay
 
 from datetime import datetime
 
@@ -28,6 +29,7 @@ class MyApp(App):
 
     def tick(self, dt):
         self.app_screen.tick(dt)
+        pass
 
 
 if __name__ == '__main__':

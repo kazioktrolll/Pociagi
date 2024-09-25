@@ -1,17 +1,9 @@
-from datetime import datetime
-
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.widget import Widget
 from kivy.uix.stacklayout import StackLayout
 from kivy.input.motionevent import MotionEvent
 
-
-class TrainDisplay(StackLayout):
-    height: int
-    def __init__(self,czas:datetime, do:str, przez:str, peron:str, **kwargs):
-        super().__init__()
-        self.bind: super().bind
-        ...
+from train import TrainDisplay
 
 
 class ScheduleDisplay(Widget):
