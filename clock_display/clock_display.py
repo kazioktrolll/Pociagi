@@ -14,7 +14,7 @@ if __name__ != "__main__": from .clock_arm import ClockArm
 class WallClockDisplay(Widget):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.datetime = datetime(2023, 9, 11, 12, 5, 10)
+        self.datetime = datetime(2024, 9, 11, 8, 5, 10)
         self.clock_image = Image(source='images/clock_image.png')
         self.clock_arm_hour = ClockArm(size=(50, 350))
         self.clock_arm_minute = ClockArm(size=(30, 400))
@@ -32,6 +32,9 @@ class WallClockDisplay(Widget):
 
     def update_datetime(self, _timedelta):
         self.datetime = self.datetime + _timedelta
+
+    def get_datetime(self):
+        return self.datetime
 
     def tick(self, dt):
         dt *= 100

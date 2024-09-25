@@ -17,12 +17,13 @@ light_blue = Colors.light_blue
 
 
 class TrainDisplay(StackLayout):
+    height = 20
     def __init__(self, **kwargs):
         super().__init__()
 
         self.orientation = 'lr-tb'
         self.size_hint = (1, None)
-        self.height = 60
+        self.height = TrainDisplay.height
 
         self.czas = kwargs['czas']
         self.do = kwargs['do']
@@ -39,7 +40,7 @@ class TrainDisplay(StackLayout):
                     lambda size: (size[0] - 6, size[1] - 6))
 
         # Create Labels
-        czas_label  = ClippedLabel(text=self.czas,  font_size="40px", color=black, size_hint=(None, 1))
+        czas_label  = ClippedLabel(text=self.czas.strftime("%H:%M"),  font_size="40px", color=black, size_hint=(None, 1))
         do_label    = ClippedLabel(text=self.do,    font_size="40px", color=white, size_hint=(None, 1))
         padding     = ClippedLabel(                                                size_hint=(None, 1))
         peron_label = ClippedLabel(text=self.peron, font_size="40px", color=white, size_hint=(None, 1))
@@ -64,6 +65,8 @@ class TrainDisplay(StackLayout):
 class ScheduleDisplay(Widget):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+
+        self.train_layout = StackLayout()
 
         def draw():
             self.root_layout = FloatLayout()
@@ -120,22 +123,37 @@ class ScheduleDisplay(Widget):
         draw()
 
         self.train_queue = []
-
-        # Add trains to be displayed (to remove later)
-        self.train_layout.add_widget(TrainDisplay(
-            czas='08:00', do=".", przez=",", peron="!"))
-        self.train_layout.add_widget(TrainDisplay(
-            czas='08:10', do="Praha", przez="Cokolwiek", peron="2"))
-        self.train_layout.add_widget(TrainDisplay(
-            czas='08:35', do="Gdynia Główna", przez="Nie wiem", peron="3"))
-        self.train_layout.add_widget(TrainDisplay(
-            czas='08:58', do="Katowice", przez="Test, Test, Test", peron="1"))
+        self.trains_to_display = []
 
     def tick(self, dt):
         self.clock_display.tick(dt)
+        self.update_trains_to_display()
 
-    def on_touch_down(self, _):
-        pass
+    def on_touch_down(self, touch):
+        super().on_touch_down(touch)
+
+    def queue_train(self, train):
+        self.train_queue.append(train)
+
+    def update_trains_to_display(self):
+        layout_height = self.train_layout.height
+        single_train_height = TrainDisplay.height
+        how_many_trains_will_fit = layout_height // single_train_height
+
+        self.train_queue.sort(key=lambda t: t.czas)
+        current_datetime = self.clock_display.get_datetime()
+        for train in self.train_queue:
+            if train.czas >= current_datetime:
+                i = self.train_queue.index(train)
+                self.trains_to_display = self.train_queue[i : i + how_many_trains_will_fit]
+                break
+        else:
+            self.trains_to_display = []
+
+        self.train_layout.clear_widgets()
+        for train in self.trains_to_display:
+            self.train_layout.add_widget(train)
 
 
-__all__ = ['ScheduleDisplay']
+
+__all__ = ['ScheduleDisplay', 'TrainDisplay']
