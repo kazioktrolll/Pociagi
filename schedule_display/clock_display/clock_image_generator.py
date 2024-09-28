@@ -35,7 +35,7 @@ class MyWidget(Widget):
                 angle_deg = i * 6  # Each strip is 6 degrees apart
                 create_rotated_rectangle(angle_deg, rect_width, rect_height, radius, center)
 
-        self.export_to_png("../images/clock_image.png")
+        self.export_to_png("../../images/clock_image.png")
 
 
 class MyApp(App):
