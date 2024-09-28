@@ -6,7 +6,7 @@ from kivy.graphics import Color, Rectangle
 
 from utensils import bind_single, ClippedStackLayout, Colors
 
-from clock_display import WallClockDisplay
+from schedule_display.clock_display import WallClockDisplay
 
 from train import TrainDisplay
 
