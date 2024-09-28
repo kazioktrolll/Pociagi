@@ -1,4 +1,5 @@
 from kivy.uix.stacklayout import StackLayout
+from kivy.uix.widget import Widget
 from kivy.graphics import Rectangle, Color
 from kivy.clock import Clock
 
@@ -55,4 +56,14 @@ class TrainDisplay(StackLayout):
         self.add_widget(peron_label)
         Clock.schedule_once(do_after_build)
 
-__all__ = ['TrainDisplay']
+class Train(Widget):
+    def __init__(self, **kwargs):
+        super().__init__(pos=(0, 0), size_hint=(None, None), size=(10, 20))
+
+        with self.canvas:
+            Color(*white)
+            Rectangle(pos=(self.x-self.width//2, self.y-self.height//2), size=self.size)
+
+
+
+__all__ = ['TrainDisplay', 'Train']
