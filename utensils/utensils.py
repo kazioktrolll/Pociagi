@@ -4,14 +4,15 @@ from kivy.uix.label import Label
 from kivy.graphics import Rectangle, PopMatrix, PushMatrix, Rotate
 
 from math import radians, sin, cos
+from pygame.math import Vector2
 
 
 class Colors(object):
-    white      = (1, 1, 1, 1)
-    black      = (0, 0, 0, 1)
-    blue       = (0.2, 0.4, 1, 1)
-    light_blue = (0.4, 0.6, 1, 1)
-    yellow     = (1, 1, 0, 1)
+    white      = (1,  1,  1,  1)
+    black      = (0,  0,  0,  1)
+    blue       = (.2, .4, 1,  1)
+    light_blue = (.4, .6, 1,  1)
+    yellow     = (1,  1,  0,  1)
 
 
 def get_bind_lambda(target, value_name, transform_lambda):
@@ -61,4 +62,5 @@ def create_rotated_rectangle(rect_angle_deg, rect_width, rect_height, radius, ce
     PopMatrix()  # Restore transformation matrix
 
 
-__all__ = ['ClippedLabel', 'ClippedStackLayout', 'bind_single', 'Colors', 'create_rotated_rectangle']
+__all__ = ['ClippedLabel', 'ClippedStackLayout', 'bind_single', 'Colors',
+           'create_rotated_rectangle', 'Vector2']
