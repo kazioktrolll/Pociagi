@@ -1,4 +1,3 @@
-from kivy.clock import Clock
 from kivy.graphics import Rectangle, Color, Ellipse, Line
 from kivy.uix.widget import Widget
 from kivy.uix.relativelayout import RelativeLayout
@@ -73,16 +72,19 @@ class Station(Widget):
             Ellipse(size=self.size, pos=(self.x-self.width//2, self.y-self.height//2))
 
 
+__all__ = ['Map']
+
 if __name__ == '__main__':
     from kivy.app import App
+    from kivy.clock import Clock
     class MyApp(App):
         def build(self):
             train_map = Map()
 
             train_map.add_station('A', (0, 0))
-            train_map.add_station('B', (200, 50))
+            train_map.add_station('D', (200, 50))
             train_map.add_station('C', (-50, 300))
-            train_map.add_station('D', (100, 100))
+            train_map.add_station('B', (100, 100))
 
             train_map.connect_stations('A', 'B')
             train_map.connect_stations('B', 'C')

@@ -22,8 +22,5 @@ class Map(Widget):
 
     def on_touch_down(self, touch) -> None: ...
 
-
 class Station(Widget):
     def __init__(self, **kwargs) -> None: ...
-
-

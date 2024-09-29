@@ -3,7 +3,8 @@ from kivy.uix.widget import Widget
 from kivy.graphics import Rectangle, Color
 from kivy.clock import Clock
 
-from utensils import bind_single, Colors, ClippedLabel
+from utensils import bind_single, Colors, ClippedLabel, get_length, normalize, create_rotated_rectangle
+from math import atan
 
 
 light_blue = Colors.light_blue
@@ -57,7 +58,7 @@ class TrainDisplay(StackLayout):
         Clock.schedule_once(do_after_build)
 
 
-class StationsPathIterator(object):
+class StationsPathIterator:
     def __init__(self, path, stations):
         self.path = path
         self.stations = stations
@@ -85,28 +86,27 @@ class Train(Widget):
 
         self.path_by_points: list[tuple[int, int]] = [stations_dict[st].pos for st in self.path_by_stations]
         self.speed = 50 #pixels per second
+        self.heading = 0
 
         self.stations_iterator = StationsPathIterator(path, self.stations_dict)
         self.current_station = next(self.stations_iterator)
         self.next_station = next(self.stations_iterator)
 
-        with self.canvas:
-            Color(*black)
-            rec = Rectangle(pos=(self.x - self.width // 2, self.y - self.height // 2), size=self.size)
-            bind_single(self, 'pos', rec, 'pos',
-                        lambda p: (p[0] - self.width // 2, p[1] - self.height // 2))
-
     def tick(self, dt):
+        # move
         position_difference = (self.next_station.x - self.x, self.next_station.y - self.y)
-        distance = (position_difference[0] ** 2 + position_difference[1] ** 2) ** 0.5
-        direction = (position_difference[0] / distance, position_difference[1] / distance)
+        distance = get_length(position_difference)
+        direction = normalize(position_difference)
+        self.heading = atan(direction[0] / direction[1]) * 180/3.14 * -1
 
         delta_pos = (direction[0] * self.speed * dt, direction[1] * self.speed * dt)
-        delta_pos_distance = (delta_pos[0] ** 2 + delta_pos[1] ** 2) ** 0.5
+        delta_pos_distance = get_length(delta_pos)
 
+        # leave current station, if any
         if self.current_station:
             self.current_station = None
 
+        # check if not skipping next station
         if delta_pos_distance < distance:
             self.pos = (self.x + delta_pos[0], self.y + delta_pos[1])
         else:
@@ -114,7 +114,11 @@ class Train(Widget):
             self.current_station = self.next_station
             self.next_station = next(self.stations_iterator)
 
-
+        # draw self on the map
+        self.canvas.clear()
+        with self.canvas:
+            Color(*black)
+            create_rotated_rectangle(self.heading, self.height, self.width, 0, self.pos)
 
 
 __all__ = ['TrainDisplay', 'Train']
