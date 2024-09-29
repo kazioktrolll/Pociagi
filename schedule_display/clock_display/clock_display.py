@@ -27,7 +27,7 @@ class WallClockDisplay(Widget):
         layout.add_widget(self.clock_arm_second.get_widget())
         bind_single(self, 'pos', layout, 'pos', lambda p: p)
 
-    def tick(self, dt):
+    def tick(self, _):
         current_time = self.database.get_time()
         self.clock_arm_hour.set_angle(current_time.hour * 30 + current_time.minute * 0.5)
         self.clock_arm_minute.set_angle(current_time.minute * 6)

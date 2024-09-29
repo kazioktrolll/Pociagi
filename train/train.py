@@ -100,7 +100,7 @@ class Train(Widget):
         direction = normalize(position_difference)
         self.heading = get_vector_heading(direction)
 
-        delta_pos = (direction[0] * self.speed * dt.seconds, direction[1] * self.speed * dt.total_seconds())
+        delta_pos = (direction[0] * self.speed * dt.total_seconds(), direction[1] * self.speed * dt.total_seconds())
         delta_pos_distance = get_length(delta_pos)
 
         # leave current station, if any

@@ -80,7 +80,10 @@ def get_vector_heading(vector):
     x, y = vector
     if y == 0:
         heading = 90 * -x / abs(x)
+        return heading
+
     heading = degrees(atan(-x / y))
+    return heading
 
 
 __all__ = ['ClippedLabel', 'ClippedStackLayout', 'bind_single', 'Colors',
