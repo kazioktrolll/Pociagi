@@ -56,13 +56,64 @@ class TrainDisplay(StackLayout):
         self.add_widget(peron_label)
         Clock.schedule_once(do_after_build)
 
+
+class StationsPathIterator(object):
+    def __init__(self, path, stations):
+        self.path = path
+        self.stations = stations
+        self.forward = True
+        self.current = 0
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        station = self.stations[self.path[self.current]]
+        self.current += 1 if self.forward else -1
+        if self.current == len(self.path) - 1 or self.current == 0:
+            self.forward = not self.forward
+        return station
+
+
 class Train(Widget):
-    def __init__(self, **kwargs):
+    def __init__(self, name, path, stations_dict):
         super().__init__(pos=(0, 0), size_hint=(None, None), size=(10, 20))
 
+        self.name = name
+        self.path_by_stations = path
+        self.stations_dict = {k: v for k, v in stations_dict.items() if k in path}
+
+        self.path_by_points: list[tuple[int, int]] = [stations_dict[st].pos for st in self.path_by_stations]
+        self.speed = 50 #pixels per second
+
+        self.stations_iterator = StationsPathIterator(path, self.stations_dict)
+        self.current_station = next(self.stations_iterator)
+        self.next_station = next(self.stations_iterator)
+
         with self.canvas:
-            Color(*white)
-            Rectangle(pos=(self.x-self.width//2, self.y-self.height//2), size=self.size)
+            Color(*black)
+            rec = Rectangle(pos=(self.x - self.width // 2, self.y - self.height // 2), size=self.size)
+            bind_single(self, 'pos', rec, 'pos',
+                        lambda p: (p[0] - self.width // 2, p[1] - self.height // 2))
+
+    def tick(self, dt):
+        position_difference = (self.next_station.x - self.x, self.next_station.y - self.y)
+        distance = (position_difference[0] ** 2 + position_difference[1] ** 2) ** 0.5
+        direction = (position_difference[0] / distance, position_difference[1] / distance)
+
+        delta_pos = (direction[0] * self.speed * dt, direction[1] * self.speed * dt)
+        delta_pos_distance = (delta_pos[0] ** 2 + delta_pos[1] ** 2) ** 0.5
+
+        if self.current_station:
+            self.current_station = None
+
+        if delta_pos_distance < distance:
+            self.pos = (self.x + delta_pos[0], self.y + delta_pos[1])
+        else:
+            self.pos = self.next_station.pos
+            self.current_station = self.next_station
+            self.next_station = next(self.stations_iterator)
+
 
 
 

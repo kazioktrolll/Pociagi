@@ -1,3 +1,4 @@
+from kivy.clock import Clock
 from kivy.graphics import Rectangle, Color, Ellipse, Line
 from kivy.uix.widget import Widget
 from kivy.uix.relativelayout import RelativeLayout
@@ -14,15 +15,15 @@ class Map(Widget):
         bind_single(self, 'center', self.center_layout, 'center', lambda c: c)
         self.add_widget(self.center_layout)
 
+        self.connections = []
+        self.connections_layout = RelativeLayout()
+        self.center_layout.add_widget(self.connections_layout)
         self.stations = {}
         self.stations_layout = RelativeLayout()
         self.center_layout.add_widget(self.stations_layout)
         self.trains = {}
         self.trains_layout = RelativeLayout()
         self.center_layout.add_widget(self.trains_layout)
-        self.connections = []
-        self.connections_layout = RelativeLayout()
-        self.center_layout.add_widget(self.connections_layout)
 
         def draw():
             with self.canvas.before:
@@ -33,9 +34,11 @@ class Map(Widget):
         draw()
 
     def tick(self, dt):
-        pass
+        for train in self.trains.values():
+            train.tick(dt)
 
-    def add_train(self, train, name):
+    def add_train(self, name, path):
+        train = Train(name, path, self.stations)
         self.trains[name] = train
         self.trains_layout.add_widget(train)
 
@@ -45,6 +48,7 @@ class Map(Widget):
         self.stations_layout.add_widget(s)
 
     def on_touch_down(self, touch):
+        # used only as a breakpoint for debugging
         pass
 
     def connect_stations(self, station_1_name, station_2_name):
@@ -74,12 +78,20 @@ if __name__ == '__main__':
     class MyApp(App):
         def build(self):
             train_map = Map()
+
             train_map.add_station('A', (0, 0))
             train_map.add_station('B', (200, 50))
+            train_map.add_station('C', (-50, 300))
+            train_map.add_station('D', (100, 100))
+
             train_map.connect_stations('A', 'B')
+            train_map.connect_stations('B', 'C')
+            train_map.connect_stations('B', 'D')
 
-            train_map.add_train(Train(), '1')
+            train_map.add_train('1', ['A', 'B', 'C'])
+            train_map.add_train('2', ['A', 'B', 'D'])
 
+            Clock.schedule_interval(train_map.tick, 1/144)
             return train_map
 
     MyApp().run()

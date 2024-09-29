@@ -1,5 +1,7 @@
 from kivy.uix.stacklayout import StackLayout
+from kivy.uix.widget import Widget
 from datetime import datetime
+from map import Station
 
 
 class TrainDisplay(StackLayout):
@@ -9,4 +11,19 @@ class TrainDisplay(StackLayout):
         self.bind: super().bind
         ...
 
-class Train(object): ...
+
+class StationsPathIterator(object):
+    def __init__(self, path: list[str], stations: dict[str, Station]) -> None:
+        ...
+
+    def __iter__(self) -> StationsPathIterator: ...
+
+    def __next__(self) -> Station: ...
+
+
+class Train(Widget):
+    def __init__(self, name: str, path: list[str], stations_dict: dict[str, Station]) -> None:
+        self.name: str
+        self.path_by_stations: list[str]
+        self.path_by_points: list[tuple[int, int]]
+        self.speed: int
