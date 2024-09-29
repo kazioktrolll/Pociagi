@@ -1,10 +1,10 @@
-from math import radians, sin, cos
+from math import radians, sin, cos, atan, degrees
+
 from kivy.graphics import Rectangle, PopMatrix, PushMatrix, Rotate
 from kivy.uix.label import Label
 from kivy.uix.stacklayout import StackLayout
 from kivy.uix.stencilview import StencilView
 from pygame.math import Vector2
-from datetime import timedelta as td
 
 
 class Colors(object):
@@ -76,5 +76,13 @@ def normalize(vector):
     return normalized
 
 
+def get_vector_heading(vector):
+    x, y = vector
+    if y == 0:
+        heading = 90 * -x / abs(x)
+    heading = degrees(atan(-x / y))
+
+
 __all__ = ['ClippedLabel', 'ClippedStackLayout', 'bind_single', 'Colors',
-           'create_rotated_rectangle', 'Vector2', 'get_length', 'normalize']
+           'create_rotated_rectangle', 'Vector2', 'get_length', 'normalize',
+           'get_vector_heading']

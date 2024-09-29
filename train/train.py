@@ -1,11 +1,10 @@
-from math import atan
-
 from kivy.clock import Clock
 from kivy.graphics import Rectangle, Color
 from kivy.uix.stacklayout import StackLayout
 from kivy.uix.widget import Widget
 
-from utensils import bind_single, Colors, ClippedLabel, get_length, normalize, create_rotated_rectangle
+from utensils import (bind_single, Colors, ClippedLabel, get_length, normalize, create_rotated_rectangle,
+                      get_vector_heading)
 
 light_blue = Colors.light_blue
 black = Colors.black
@@ -99,9 +98,9 @@ class Train(Widget):
         position_difference = (self.next_station.x - self.x, self.next_station.y - self.y)
         distance = get_length(position_difference)
         direction = normalize(position_difference)
-        self.heading = atan(-direction[0] / direction[1]) * 180 / 3.14
+        self.heading = get_vector_heading(direction)
 
-        delta_pos = (direction[0] * self.speed * dt.total_seconds(), direction[1] * self.speed * dt.total_seconds())
+        delta_pos = (direction[0] * self.speed * dt.seconds, direction[1] * self.speed * dt.total_seconds())
         delta_pos_distance = get_length(delta_pos)
 
         # leave current station, if any
