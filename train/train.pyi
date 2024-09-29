@@ -1,12 +1,15 @@
+from datetime import datetime, timedelta
+
 from kivy.uix.stacklayout import StackLayout
 from kivy.uix.widget import Widget
-from datetime import datetime
+
 from map import Station
 
 
 class TrainDisplay(StackLayout):
     height: int
-    def __init__(self,czas:datetime, do:str, przez:str, peron:str, **kwargs) -> None:
+
+    def __init__(self, czas: datetime, do: str, przez: str, peron: str, **kwargs) -> None:
         super().__init__()
         self.bind: super().bind
         ...
@@ -27,3 +30,5 @@ class Train(Widget):
         self.path_by_stations: list[str]
         self.path_by_points: list[tuple[int, int]]
         self.speed: int
+
+    def tick(self, dt: timedelta) -> None: ...

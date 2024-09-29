@@ -1,10 +1,8 @@
 from kivy.app import App
 from kivy.clock import Clock
-from kivy.uix.widget import Widget
 from kivy.uix.image import Image
 from kivy.uix.relativelayout import RelativeLayout
-
-from datetime import datetime, timedelta
+from kivy.uix.widget import Widget
 
 from utensils import bind_single
 
@@ -19,7 +17,6 @@ class WallClockDisplay(Widget):
         self.clock_arm_hour = ClockArm(size=(50, 350))
         self.clock_arm_minute = ClockArm(size=(30, 400))
         self.clock_arm_second = ClockArm(size=(10, 450))
-
 
         layout = RelativeLayout(size=self.size)
         bind_single(self, 'size', layout, 'size', lambda s: s)
@@ -40,12 +37,15 @@ class WallClockDisplay(Widget):
 if __name__ == '__main__':
     from clock_arm import ClockArm
     from database import Database
+
+
     class MyApp(App):
         def build(self):
             clock = WallClockDisplay(Database())
             Clock.schedule_interval(clock.tick, 1 / 144)
-            Clock.schedule_interval(clock.database.tick, 1/144)
+            Clock.schedule_interval(clock.database.tick, 1 / 144)
             return clock
+
 
     MyApp().run()
 

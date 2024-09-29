@@ -1,13 +1,12 @@
 from kivy.app import App
-from kivy.uix.widget import Widget
 from kivy.uix.image import Image
+from kivy.uix.widget import Widget
 
-from datetime import datetime, timedelta
 from database import Database
 
 
 class WallClockDisplay(Widget):
-    def __init__(self,database: Database, **kwargs):
+    def __init__(self, database: Database, **kwargs):
         super().__init__(**kwargs)
         self.texture: Image
 
@@ -16,5 +15,6 @@ class WallClockDisplay(Widget):
 
 class MyApp(App):
     def build(self) -> WallClockDisplay: ...
+
 
 __all__: list[str]

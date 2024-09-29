@@ -1,5 +1,7 @@
-from kivy.uix.widget import Widget
+from datetime import timedelta
+
 from kivy.uix.relativelayout import RelativeLayout
+from kivy.uix.widget import Widget
 
 from train import Train
 
@@ -10,7 +12,7 @@ class Map(Widget):
         self.trains: dict[str, Train]
         self.center_layout: RelativeLayout
 
-    def tick(self, dt: int) -> None: ...
+    def tick(self, dt: timedelta) -> None: ...
 
     def add_train(self, name: str, path: list[str]) -> None: ...
 
@@ -21,6 +23,7 @@ class Map(Widget):
     def update_connections(self) -> None: ...
 
     def on_touch_down(self, touch) -> None: ...
+
 
 class Station(Widget):
     def __init__(self, **kwargs) -> None: ...

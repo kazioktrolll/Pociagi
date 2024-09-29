@@ -1,9 +1,9 @@
 from kivy.graphics import Rectangle, Color, Ellipse, Line
-from kivy.uix.widget import Widget
 from kivy.uix.relativelayout import RelativeLayout
+from kivy.uix.widget import Widget
 
-from utensils import bind_single, Colors
 from train import Train
+from utensils import bind_single, Colors
 
 
 class Map(Widget):
@@ -69,7 +69,7 @@ class Station(Widget):
 
         with self.canvas:
             Color(*Colors.white)
-            Ellipse(size=self.size, pos=(self.x-self.width//2, self.y-self.height//2))
+            Ellipse(size=self.size, pos=(self.x - self.width // 2, self.y - self.height // 2))
 
 
 __all__ = ['Map']
@@ -77,6 +77,8 @@ __all__ = ['Map']
 if __name__ == '__main__':
     from kivy.app import App
     from kivy.clock import Clock
+
+
     class MyApp(App):
         def build(self):
             train_map = Map()
@@ -93,7 +95,8 @@ if __name__ == '__main__':
             train_map.add_train('1', ['A', 'B', 'C'])
             train_map.add_train('2', ['A', 'B', 'D'])
 
-            Clock.schedule_interval(train_map.tick, 1/144)
+            Clock.schedule_interval(train_map.tick, 1 / 144)
             return train_map
+
 
     MyApp().run()

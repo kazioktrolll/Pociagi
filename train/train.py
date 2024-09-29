@@ -1,11 +1,11 @@
-from kivy.uix.stacklayout import StackLayout
-from kivy.uix.widget import Widget
-from kivy.graphics import Rectangle, Color
-from kivy.clock import Clock
-
-from utensils import bind_single, Colors, ClippedLabel, get_length, normalize, create_rotated_rectangle
 from math import atan
 
+from kivy.clock import Clock
+from kivy.graphics import Rectangle, Color
+from kivy.uix.stacklayout import StackLayout
+from kivy.uix.widget import Widget
+
+from utensils import bind_single, Colors, ClippedLabel, get_length, normalize, create_rotated_rectangle
 
 light_blue = Colors.light_blue
 black = Colors.black
@@ -14,6 +14,7 @@ white = Colors.white
 
 class TrainDisplay(StackLayout):
     height = 20
+
     def __init__(self, **kwargs):
         super().__init__()
 
@@ -36,12 +37,11 @@ class TrainDisplay(StackLayout):
                     lambda size: (size[0] - 6, size[1] - 6))
 
         # Create Labels
-        czas_label  = ClippedLabel(text=self.czas.strftime("%H:%M"),  font_size="40px", color=black, size_hint=(None, 1))
-        do_label    = ClippedLabel(text=self.do,    font_size="40px", color=white, size_hint=(None, 1))
-        padding     = ClippedLabel(                                                size_hint=(None, 1))
+        czas_label = ClippedLabel(text=self.czas.strftime("%H:%M"), font_size="40px", color=black, size_hint=(None, 1))
+        do_label = ClippedLabel(text=self.do, font_size="40px", color=white, size_hint=(None, 1))
+        padding = ClippedLabel(size_hint=(None, 1))
         peron_label = ClippedLabel(text=self.peron, font_size="40px", color=white, size_hint=(None, 1))
         przez_label = ClippedLabel(text=self.przez, font_size="40px", color=white, size_hint=(None, 1))
-
 
         def do_after_build(_):
             czas_label.width = 110
@@ -85,21 +85,23 @@ class Train(Widget):
         self.stations_dict = {k: v for k, v in stations_dict.items() if k in path}
 
         self.path_by_points: list[tuple[int, int]] = [stations_dict[st].pos for st in self.path_by_stations]
-        self.speed = 50 #pixels per second
+        self.speed = 2  # pixels per second
         self.heading = 0
 
         self.stations_iterator = StationsPathIterator(path, self.stations_dict)
         self.current_station = next(self.stations_iterator)
         self.next_station = next(self.stations_iterator)
 
+        self.pos = self.current_station.center
+
     def tick(self, dt):
         # move
         position_difference = (self.next_station.x - self.x, self.next_station.y - self.y)
         distance = get_length(position_difference)
         direction = normalize(position_difference)
-        self.heading = atan(direction[0] / direction[1]) * 180/3.14 * -1
+        self.heading = atan(-direction[0] / direction[1]) * 180 / 3.14
 
-        delta_pos = (direction[0] * self.speed * dt, direction[1] * self.speed * dt)
+        delta_pos = (direction[0] * self.speed * dt.total_seconds(), direction[1] * self.speed * dt.total_seconds())
         delta_pos_distance = get_length(delta_pos)
 
         # leave current station, if any

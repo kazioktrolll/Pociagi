@@ -1,18 +1,18 @@
+from math import radians, sin, cos
+from kivy.graphics import Rectangle, PopMatrix, PushMatrix, Rotate
+from kivy.uix.label import Label
 from kivy.uix.stacklayout import StackLayout
 from kivy.uix.stencilview import StencilView
-from kivy.uix.label import Label
-from kivy.graphics import Rectangle, PopMatrix, PushMatrix, Rotate
-
-from math import radians, sin, cos
 from pygame.math import Vector2
+from datetime import timedelta as td
 
 
 class Colors(object):
-    white      = (1,  1,  1,  1)
-    black      = (0,  0,  0,  1)
-    blue       = (.2, .4, 1,  1)
-    light_blue = (.4, .6, 1,  1)
-    yellow     = (1,  1,  0,  1)
+    white = (1, 1, 1, 1)
+    black = (0, 0, 0, 1)
+    blue = (.2, .4, 1, 1)
+    light_blue = (.4, .6, 1, 1)
+    yellow = (1, 1, 0, 1)
 
 
 def get_bind_lambda(target, value_name, transform_lambda):
@@ -22,6 +22,7 @@ def get_bind_lambda(target, value_name, transform_lambda):
     # transform_lambda: lambda size: (size[0] // 2, size[1] // 2)
     bind_lambda = lambda instance, value: setattr(target, value_name, transform_lambda(value))
     return bind_lambda
+
 
 def bind_single(parent, parent_attr_name, child, child_attr_name, transform_lambda):
     # Example: bind child y as .5 parent height
@@ -67,6 +68,9 @@ def get_length(vector):
 
 
 def normalize(vector):
+    if vector == (0, 0):
+        raise Exception("The vector cannot be zero")
+
     l = get_length(vector)
     normalized = (vector[0] / l, vector[1] / l)
     return normalized
