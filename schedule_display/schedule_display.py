@@ -5,18 +5,18 @@ from kivy.uix.stacklayout import StackLayout
 from kivy.graphics import Color, Rectangle
 
 from utensils import bind_single, ClippedStackLayout, Colors
-
 from schedule_display.clock_display import WallClockDisplay
-
 from train import TrainDisplay
+from database import Database
 
 yellow = Colors.yellow
 blue = Colors.blue
 
 
 class ScheduleDisplay(Widget):
-    def __init__(self, **kwargs):
+    def __init__(self, database, **kwargs):
         super().__init__(**kwargs)
+        self.database = database
 
         self.train_layout = StackLayout()
 
@@ -68,7 +68,7 @@ class ScheduleDisplay(Widget):
 
 
             # Clock
-            self.clock_display = WallClockDisplay(size_hint=(None, None), size=(180, 180),
+            self.clock_display = WallClockDisplay(database=database, size_hint=(None, None), size=(180, 180),
                                                   x=20, top=self.root_layout.top-20)
             self.root_layout.add_widget(self.clock_display)
             bind_single(self.root_layout, 'top', self.clock_display, 'top', lambda y: y-20)
@@ -93,7 +93,7 @@ class ScheduleDisplay(Widget):
         how_many_trains_will_fit = layout_height // single_train_height
 
         self.train_queue.sort(key=lambda t: t.czas)
-        current_datetime = self.clock_display.get_datetime()
+        current_datetime = self.database.get_time()
         for train in self.train_queue:
             if train.czas >= current_datetime:
                 i = self.train_queue.index(train)

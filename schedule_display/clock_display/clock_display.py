@@ -12,9 +12,9 @@ if __name__ != "__main__": from .clock_arm import ClockArm
 
 
 class WallClockDisplay(Widget):
-    def __init__(self, **kwargs):
+    def __init__(self, database, **kwargs):
         super().__init__(**kwargs)
-        self.datetime = datetime(2024, 9, 11, 8, 5, 10)
+        self.database = database
         self.clock_image = Image(source='images/clock_image.png')
         self.clock_arm_hour = ClockArm(size=(50, 350))
         self.clock_arm_minute = ClockArm(size=(30, 400))
@@ -30,26 +30,21 @@ class WallClockDisplay(Widget):
         layout.add_widget(self.clock_arm_second.get_widget())
         bind_single(self, 'pos', layout, 'pos', lambda p: p)
 
-    def update_datetime(self, _timedelta):
-        self.datetime = self.datetime + _timedelta
-
-    def get_datetime(self):
-        return self.datetime
-
     def tick(self, dt):
-        dt *= 100
-        self.update_datetime(timedelta(seconds=dt))
-        self.clock_arm_hour.set_angle(self.datetime.hour * 30 + self.datetime.minute * 0.5)
-        self.clock_arm_minute.set_angle(self.datetime.minute * 6)
-        self.clock_arm_second.set_angle(self.datetime.second * 6)
+        current_time = self.database.get_time()
+        self.clock_arm_hour.set_angle(current_time.hour * 30 + current_time.minute * 0.5)
+        self.clock_arm_minute.set_angle(current_time.minute * 6)
+        self.clock_arm_second.set_angle(current_time.second * 6)
 
 
 if __name__ == '__main__':
     from clock_arm import ClockArm
+    from database import Database
     class MyApp(App):
         def build(self):
-            clock = WallClockDisplay()
+            clock = WallClockDisplay(Database())
             Clock.schedule_interval(clock.tick, 1 / 144)
+            Clock.schedule_interval(clock.database.tick, 1/144)
             return clock
 
     MyApp().run()
