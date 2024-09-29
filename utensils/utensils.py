@@ -62,5 +62,15 @@ def create_rotated_rectangle(rect_angle_deg, rect_width, rect_height, radius, ce
     PopMatrix()  # Restore transformation matrix
 
 
+def get_length(vector):
+    return (vector[0] ** 2 + vector[1] ** 2) ** 0.5
+
+
+def normalize(vector):
+    l = get_length(vector)
+    normalized = (vector[0] / l, vector[1] / l)
+    return normalized
+
+
 __all__ = ['ClippedLabel', 'ClippedStackLayout', 'bind_single', 'Colors',
-           'create_rotated_rectangle', 'Vector2']
+           'create_rotated_rectangle', 'Vector2', 'get_length', 'normalize']
