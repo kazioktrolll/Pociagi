@@ -1,4 +1,4 @@
-from kivy.graphics import Rectangle, Color, Ellipse, Line
+from kivy.graphics import Rectangle, Color, Line
 from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.widget import Widget
 
@@ -78,8 +78,8 @@ if __name__ == '__main__':
 
     class MyApp(App):
         def build(self):
-            database = database()
-            train_map = Map()
+            database = Database()
+            train_map = Map(database)
 
             train_map.add_station('A', (0, 0))
             train_map.add_station('D', (200, 50))
