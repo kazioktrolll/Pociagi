@@ -5,8 +5,11 @@ from schedule_display import ScheduleDisplay
 
 
 class Station(Widget):
-    def __init__(self, database: Database, pos: tuple[float, float]) -> None:
+    def __init__(self, database: Database, pos: tuple[float, float], name: str) -> None:
         self.schedule_display: ScheduleDisplay
         ...
 
     def tick(self, dt: timedelta) -> None: ...
+
+    @property
+    def name(self) -> str: ...

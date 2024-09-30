@@ -6,11 +6,12 @@ from schedule_display import ScheduleDisplay
 
 
 class Station(Widget):
-    def __init__(self, database, pos):
+    def __init__(self, database, pos, name):
         super().__init__(pos=pos, size_hint=(None, None), size=(30, 30))
 
         self.database = database
         self.schedule_display = ScheduleDisplay(database)
+        self.__name = name
 
         with self.canvas:
             Color(*Colors.white)
@@ -18,3 +19,7 @@ class Station(Widget):
 
     def tick(self, dt):
         self.schedule_display.tick(dt)
+
+    @property
+    def name(self):
+        return self.__name
