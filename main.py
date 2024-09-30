@@ -18,7 +18,7 @@ class MyApp(App):
         super(MyApp, self).__init__(**kwargs)
         self.database = Database()
         self.app_screen = ScheduleDisplay(self.database)
-        self.train_map = Map()
+        self.train_map = Map(self.database)
         self.layout = BoxLayout(orientation='horizontal')
 
         def setup_display():

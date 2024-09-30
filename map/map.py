@@ -3,13 +3,15 @@ from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.widget import Widget
 
 from train import Train
+from station import Station
 from utensils import bind_single, Colors
 from datetime import timedelta
 
 
 class Map(Widget):
-    def __init__(self, **kwargs):
+    def __init__(self, database, **kwargs):
         super().__init__(**kwargs)
+        self.database = database
 
         self.center_layout = RelativeLayout(size=(0, 0), center=self.center)
         bind_single(self, 'center', self.center_layout, 'center', lambda c: c)
@@ -46,7 +48,7 @@ class Map(Widget):
         self.trains_layout.add_widget(train)
 
     def add_station(self, name, pos):
-        s = Station(pos=pos)
+        s = Station(database=self.database, pos=pos)
         self.stations[name] = s
         self.stations_layout.add_widget(s)
 
@@ -67,23 +69,16 @@ class Map(Widget):
                 Line(points=points, width=4)
 
 
-class Station(Widget):
-    def __init__(self, pos):
-        super().__init__(pos=pos, size_hint=(None, None), size=(30, 30))
-
-        with self.canvas:
-            Color(*Colors.white)
-            Ellipse(size=self.size, pos=(self.x - self.width // 2, self.y - self.height // 2))
-
-
 __all__ = ['Map']
 
 if __name__ == '__main__':
     from kivy.app import App
     from kivy.clock import Clock
+    from database import Database
 
     class MyApp(App):
         def build(self):
+            database = database()
             train_map = Map()
 
             train_map.add_station('A', (0, 0))

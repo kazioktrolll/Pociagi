@@ -4,10 +4,11 @@ from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.widget import Widget
 
 from train import Train
+from database import Database
 
 
 class Map(Widget):
-    def __init__(self, **kwargs) -> None:
+    def __init__(self, database: Database, **kwargs) -> None:
         self.stations: dict[str, Station]
         self.trains: dict[str, Train]
         self.center_layout: RelativeLayout
