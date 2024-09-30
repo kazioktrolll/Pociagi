@@ -1,4 +1,4 @@
-from kivy.graphics import Rectangle, Color, Line
+from kivy.graphics import Rectangle, Color
 from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.widget import Widget
 from utensils import bind_single, Colors
@@ -43,23 +43,17 @@ class Map(Widget):
         for station in self.database.stations.values():
             self.stations_layout.add_widget(station)
 
-        self.__update_connections()
-
-    def __update_connections(self):
-        self.connections_layout.canvas.clear()
-        for connection in self.database.connections:
-            points = list(self.database.stations[connection[0]].pos + self.database.stations[connection[1]].pos)
-            with self.connections_layout.canvas:
-                Color(*Colors.white)
-                Line(points=points, width=4)
+        for connection in self.database.connections.values():
+            self.connections_layout.add_widget(connection)
 
 
 __all__ = ['Map']
-"""
+
 if __name__ == '__main__':
     from kivy.app import App
     from kivy.clock import Clock
     from database import Database
+    from datetime import timedelta
 
     class MyApp(App):
         def build(self):
@@ -84,4 +78,3 @@ if __name__ == '__main__':
 
 
     MyApp().run()
-"""

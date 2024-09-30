@@ -1,12 +1,13 @@
 from datetime import datetime, timedelta
 from station import Station
 from train import Train
+from connection import Connection
 
 
 class Database:
     def __init__(self) -> None:
         self.__datetime: datetime = None
-        self.connections: list[tuple[str, str]] = None
+        self.connections: dict[str, Connection] = None
         self.stations: dict[str, Station] = None
         self.trains: dict[str, Train] = None
 
