@@ -1,9 +1,7 @@
 from kivy.graphics import Rectangle, Color, Line
 from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.widget import Widget
-
 from utensils import bind_single, Colors
-from datetime import timedelta
 
 
 class Map(Widget):

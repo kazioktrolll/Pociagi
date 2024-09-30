@@ -1,4 +1,3 @@
-from datetime import timedelta
 from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.widget import Widget
 from database import Database

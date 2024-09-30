@@ -4,7 +4,6 @@ from kivy.clock import Clock
 from kivy.core.window import Window
 from database import Database
 from map import Map
-from schedule_display import ScheduleDisplay
 from train import TrainDisplay
 from kivy.uix.boxlayout import BoxLayout
 
@@ -13,32 +12,14 @@ class MyApp(App):
     def __init__(self, **kwargs):
         super(MyApp, self).__init__(**kwargs)
         self.database = Database()
-        self.app_screen = ScheduleDisplay(self.database)
         self.train_map = Map(self.database)
         self.layout = BoxLayout(orientation='horizontal')
 
-        def setup_display():
-            self.train_map.size_hint=(.25, 1)
-            self.app_screen.size_hint=(.75, 1)
-
-            self.layout.add_widget(self.train_map)
-            self.layout.add_widget(self.app_screen)
-
-        def setup_schedule_display():
-            self.app_screen.queue_train(TrainDisplay(
-                czas=datetime(2024, 9, 11, 8, 3), do=".", przez=",", peron="!"))
-            self.app_screen.queue_train(TrainDisplay(
-                czas=datetime(2024, 9, 11, 8, 15), do="Praha", przez="Cokolwiek", peron="2"))
-            self.app_screen.queue_train(TrainDisplay(
-                czas=datetime(2024, 9, 11, 8, 47), do="Gdynia Główna", przez="Nie wiem", peron="3"))
-            self.app_screen.queue_train(TrainDisplay(
-                czas=datetime(2024, 9, 11, 8, 58), do="Katowice", przez="Test, Test, Test", peron="1"))
-
         def setup_map():
             self.database.add_station('A', (0, 0))
-            self.database.add_station('D', (200, 50))
+            self.database.add_station('D', (200, 0))
             self.database.add_station('C', (0, 300))
-            self.database.add_station('B', (100, 100))
+            self.database.add_station('B', (70, 70))
 
             self.database.connect_stations('A', 'B')
             self.database.connect_stations('A', 'C')
@@ -59,9 +40,29 @@ class MyApp(App):
 
             self.train_map.update_widgets()
 
-        setup_display()
-        setup_schedule_display()
         setup_map()
+        self.app_screen = self.database.get_station('A').schedule_display
+
+        def setup_schedule_display():
+            self.app_screen.queue_train(TrainDisplay(
+                czas=datetime(2024, 9, 11, 8, 3), do=".", przez=",", peron="!"))
+            self.app_screen.queue_train(TrainDisplay(
+                czas=datetime(2024, 9, 11, 8, 15), do="Praha", przez="Cokolwiek", peron="2"))
+            self.app_screen.queue_train(TrainDisplay(
+                czas=datetime(2024, 9, 11, 8, 47), do="Gdynia Główna", przez="Nie wiem", peron="3"))
+            self.app_screen.queue_train(TrainDisplay(
+                czas=datetime(2024, 9, 11, 8, 58), do="Katowice", przez="Test, Test, Test", peron="1"))
+
+        setup_schedule_display()
+
+        def setup_display():
+            self.train_map.size_hint=(.25, 1)
+            self.app_screen.size_hint=(.75, 1)
+
+            self.layout.add_widget(self.train_map)
+            self.layout.add_widget(self.app_screen)
+
+        setup_display()
 
     def build(self):
         Window.maximize()

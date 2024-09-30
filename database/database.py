@@ -32,6 +32,9 @@ class Database:
         s = Station(database=self, pos=pos)
         self.stations[name] = s
 
+    def get_station(self, name):
+        return self.stations[name]
+
     def connect_stations(self, station_1_name, station_2_name):
         self.connections.append((station_1_name, station_2_name))
 
