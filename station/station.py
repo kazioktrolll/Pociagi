@@ -15,3 +15,6 @@ class Station(Widget):
         with self.canvas:
             Color(*Colors.white)
             Ellipse(size=self.size, pos=(self.x - self.width // 2, self.y - self.height // 2))
+
+    def tick(self, dt):
+        self.schedule_display.tick(dt)

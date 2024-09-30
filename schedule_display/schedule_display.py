@@ -75,15 +75,12 @@ class ScheduleDisplay(Widget):
 
     def tick(self, dt):
         self.clock_display.tick(dt)
-        self.update_trains_to_display()
-
-    def on_touch_down(self, touch):
-        super().on_touch_down(touch)
+        self.__update_trains_to_display()
 
     def queue_train(self, train):
         self.train_queue.append(train)
 
-    def update_trains_to_display(self):
+    def __update_trains_to_display(self):
         layout_height = self.train_layout.height
         single_train_height = TrainDisplay.height
         how_many_trains_will_fit = layout_height // single_train_height

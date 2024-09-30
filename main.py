@@ -6,11 +6,7 @@ from database import Database
 from map import Map
 from schedule_display import ScheduleDisplay
 from train import TrainDisplay
-from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.widget import Widget
-
-from utensils.utensils import bind_single
 
 
 class MyApp(App):
