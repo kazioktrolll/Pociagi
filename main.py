@@ -35,30 +35,29 @@ class MyApp(App):
                 czas=datetime(2024, 9, 11, 8, 58), do="Katowice", przez="Test, Test, Test", peron="1"))
 
         def setup_map():
-            self.train_map.add_station('A', (0, 0))
-            self.train_map.add_station('D', (200, 50))
-            self.train_map.add_station('C', (0, 300))
-            self.train_map.add_station('B', (100, 100))
+            self.database.add_station('A', (0, 0))
+            self.database.add_station('D', (200, 50))
+            self.database.add_station('C', (0, 300))
+            self.database.add_station('B', (100, 100))
 
-            self.train_map.connect_stations('A', 'B')
-            self.train_map.connect_stations('A', 'C')
-            self.train_map.connect_stations('A', 'D')
-            self.train_map.connect_stations('B', 'C')
-            self.train_map.connect_stations('B', 'D')
-            self.train_map.connect_stations('C', 'D')
+            self.database.connect_stations('A', 'B')
+            self.database.connect_stations('A', 'C')
+            self.database.connect_stations('A', 'D')
+            self.database.connect_stations('B', 'C')
+            self.database.connect_stations('B', 'D')
+            self.database.connect_stations('C', 'D')
 
-            self.train_map.add_train('1', ['A', 'B', 'C'])
-            self.train_map.add_train('2', ['A', 'B', 'D'])
-            self.train_map.add_train('3', ['A', 'C', 'B'])
-            self.train_map.add_train('4', ['A', 'C', 'D'])
-            self.train_map.add_train('5', ['A', 'D', 'B'])
-            self.train_map.add_train('6', ['A', 'D', 'C'])
-            self.train_map.add_train('7', ['B', 'A', 'C'])
-            self.train_map.add_train('8', ['B', 'A', 'D'])
-            self.train_map.add_train('9', ['B', 'C', 'A'])
+            self.database.add_train('1', ['A', 'B', 'C'])
+            self.database.add_train('2', ['A', 'B', 'D'])
+            self.database.add_train('3', ['A', 'C', 'B'])
+            self.database.add_train('4', ['A', 'C', 'D'])
+            self.database.add_train('5', ['A', 'D', 'B'])
+            self.database.add_train('6', ['A', 'D', 'C'])
+            self.database.add_train('7', ['B', 'A', 'C'])
+            self.database.add_train('8', ['B', 'A', 'D'])
+            self.database.add_train('9', ['B', 'C', 'A'])
 
-            Clock.schedule_interval(self.train_map.tick, 1 / 144)
-            return self.train_map
+            self.train_map.update_widgets()
 
         setup_display()
         setup_schedule_display()
@@ -73,7 +72,6 @@ class MyApp(App):
         dt = Database.timespan_real_to_simulated(_dt)
         self.app_screen.tick(dt)
         self.database.tick(dt)
-        self.train_map.tick(dt)
 
 
 if __name__ == '__main__':
