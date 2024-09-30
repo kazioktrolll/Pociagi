@@ -1,13 +1,16 @@
 from datetime import datetime
-
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.core.window import Window
-
 from database import Database
 from map import Map
 from schedule_display import ScheduleDisplay
 from train import TrainDisplay
+from kivy.uix.floatlayout import FloatLayout
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.widget import Widget
+
+from utensils.utensils import bind_single
 
 
 class MyApp(App):
@@ -16,6 +19,14 @@ class MyApp(App):
         self.database = Database()
         self.app_screen = ScheduleDisplay(self.database)
         self.train_map = Map()
+        self.layout = BoxLayout(orientation='horizontal')
+
+        def setup_display():
+            self.train_map.size_hint=(.25, 1)
+            self.app_screen.size_hint=(.75, 1)
+
+            self.layout.add_widget(self.train_map)
+            self.layout.add_widget(self.app_screen)
 
         def setup_schedule_display():
             self.app_screen.queue_train(TrainDisplay(
@@ -53,17 +64,17 @@ class MyApp(App):
             Clock.schedule_interval(self.train_map.tick, 1 / 144)
             return self.train_map
 
+        setup_display()
         setup_schedule_display()
         setup_map()
 
     def build(self):
         Window.maximize()
         Clock.schedule_interval(self.tick, 1 / 144)
-        #return self.app_screen
-        return self.train_map
+        return self.layout
 
-    def tick(self, dt):
-        dt = Database.timespan_real_to_simulated(dt)
+    def tick(self, _dt):
+        dt = Database.timespan_real_to_simulated(_dt)
         self.app_screen.tick(dt)
         self.database.tick(dt)
         self.train_map.tick(dt)

@@ -1,5 +1,5 @@
 from kivy.graphics import Color, Rectangle
-from kivy.uix.floatlayout import FloatLayout
+from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.label import Label
 from kivy.uix.stacklayout import StackLayout
 from kivy.uix.widget import Widget
@@ -20,15 +20,17 @@ class ScheduleDisplay(Widget):
         self.train_layout = StackLayout()
 
         def draw():
-            self.root_layout = FloatLayout()
+            self.root_layout = RelativeLayout()
             self.add_widget(self.root_layout)
             bind_single(self, 'size', self.root_layout, 'size', lambda s: s)
+            bind_single(self, 'pos', self.root_layout, 'pos', lambda p: p)
 
             # Create background
             with self.canvas.before:
                 Color(*blue)
                 background = Rectangle(pos=(0, 0), size=(self.width, self.height))
                 bind_single(self, 'size', background, 'size', lambda s: s)
+            bind_single(self, 'pos', background, 'pos', lambda p: p)
 
             # Main layout
             main_layout = StackLayout(orientation='tb-lr', size_hint=(1, 1))

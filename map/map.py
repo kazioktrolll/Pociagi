@@ -4,6 +4,7 @@ from kivy.uix.widget import Widget
 
 from train import Train
 from utensils import bind_single, Colors
+from datetime import timedelta
 
 
 class Map(Widget):
@@ -33,6 +34,9 @@ class Map(Widget):
         draw()
 
     def tick(self, dt):
+        if type(dt) is not timedelta:
+            return None
+
         for train in self.trains.values():
             train.tick(dt)
 
@@ -78,7 +82,6 @@ if __name__ == '__main__':
     from kivy.app import App
     from kivy.clock import Clock
 
-
     class MyApp(App):
         def build(self):
             train_map = Map()
@@ -95,7 +98,8 @@ if __name__ == '__main__':
             train_map.add_train('1', ['A', 'B', 'C'])
             train_map.add_train('2', ['A', 'B', 'D'])
 
-            Clock.schedule_interval(train_map.tick, 1 / 144)
+            t = lambda dt: train_map.tick(timedelta(seconds=dt))
+            Clock.schedule_interval(t, 1 / 144)
             return train_map
 
 
